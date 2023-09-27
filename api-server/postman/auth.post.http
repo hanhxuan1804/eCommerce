@@ -1,0 +1,30 @@
+@url_dev=http://localhost:3001/v1/api
+
+## User signup
+POST {{url_dev}}/auth/signup
+Content-Type: application/json
+
+{
+    "email": "nhanhxuan2@gmail.com",
+    "password": "123456",
+    "name": "Hanh Xuan"
+}
+
+###
+## User login
+POST {{url_dev}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "hanhxuan1804@gmail.com",
+    "password": "123456"
+}
+
+###
+## User refresh token
+POST {{url_dev}}/auth/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imhhbmh4dWFuMTgwNEBnbWFpbC5jb20iLCJpYXQiOjE2OTU2MzM4NzEsImV4cCI6MTY5NjIzODY3MX0.vAylQeoaX75UR5uQPSc7QwBqcRvZFwlgiZlckIVNtfQ"
+}

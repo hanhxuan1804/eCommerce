@@ -1,11 +1,33 @@
-module.exports = {
-  port: process.env.PORT || 3000,
-  db: {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 27017,
-    name: process.env.DB_NAME || 'my-database',
-    user: process.env.DB_USER || '',
-    pass: process.env.DB_PASS || '',
+const dev = {
+  port: process.env.DEV_PORT || 3000,
+  dbstring: process.env.DEV_DB_STRING || 'mongodb://localhost:27017/eCommerce',
+  nodemailercfg: {
+    email: process.env.DEV_NODEMAILER_EMAIL || 'xxx',
+    password: process.env.DEV_NODEMAILER_PASSWORD || 'xxx',
   },
-  secret: process.env.SECRET || 'my-secret-key',
+  secretstring: process.env.DEV_SECRET || 'secret',
+  appuserroles: {
+    user: "001",
+    admin: "000",
+    shop: "002",
+  },
 };
+
+const prod ={
+  port: process.env.PROD_PORT || 3000,
+  dbstring: process.env.PROD_DB_STRING || 'mongodb://localhost:27017/eCommerce',
+  nodemailercfg: {
+    email: process.env.PROD_NODEMAILER_EMAIL || 'xxx',
+    password: process.env.PROD_NODEMAILER_PASSWORD || 'xxx',
+  },
+  secretstring: process.env.PROD_SECRET || 'secret',
+  appuserroles: {
+    user: "001",
+    admin: "000",
+    shop: "002",
+  },
+};
+
+const config ={dev, prod};
+const env = process.env.NODE_ENV || 'dev';
+module.exports = config[env];
