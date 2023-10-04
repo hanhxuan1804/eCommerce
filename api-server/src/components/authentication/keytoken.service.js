@@ -1,20 +1,16 @@
-const Keys = require('../../dbs/models/keytoken.model');
-
+const { Keys } = require("../../dbs/models");
 class KeyTokenService {
-    static createKeyToken = async ({userId, publicKey}) =>{
-        try {
-            const publicKeyString = publicKey.toString();
-            const tokens = await Keys.create({
-                user: userId,
-                publicKey: publicKeyString,
-            })
-            return tokens ? tokens.publicKey : null
-        } catch (error) {
-            return error;
-        }
+  static createKeyToken = async ({ userId, publicKey, refreshToken }) => {
+    try {
+      const filter = { user: userId },
+        update = { publicKey, refreshToken },
+        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+      const tokens = await Keys.findOneAndUpdate(filter, update, options);
+      return tokens ? tokens.publicKey : null;
+    } catch (error) {
+      return error;
     }
-    
-
+  };
 }
 
 module.exports = KeyTokenService;

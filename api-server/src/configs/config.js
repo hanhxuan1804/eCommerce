@@ -11,6 +11,11 @@ const dev = {
     admin: "000",
     shop: "002",
   },
+  reqheader: {
+    APIKEY: "x-api-key",
+    CLIENT_ID: "x-client-id",
+    AUTHORIZATION: "authorization",
+  },
 };
 
 const prod ={
@@ -25,6 +30,11 @@ const prod ={
     user: "001",
     admin: "000",
     shop: "002",
+  },
+  reqheader: {
+    APIKEY: "x-api-key",
+    CLIENT_ID: "x-client-id",
+    AUTHORIZATION: "authorization",
   },
 };
 

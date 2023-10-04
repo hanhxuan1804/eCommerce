@@ -2,8 +2,8 @@ const mongoose = require("mongoose"); // Erase if already required
 
 const COLLECTION_NAME = "Shops";
 const DOCUMENT_NAME = "Shop";
-// Declare the Schema of the Mongo model
-var shopSchema = new mongoose.Schema(
+
+const shopSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -16,27 +16,29 @@ var shopSchema = new mongoose.Schema(
       unique: true,
       require: true,
     },
-    password: {
+    phone: {
       type: String,
-      require: true,
+      trim: true,
+      maxLength: 10,
     },
-    verify: {
-      type: mongoose.Schema.Types.Boolean,
-      default: false,
-    },
-    status: {
+    address: {
       type: String,
-      enum: ["active", "inactive"],
-      default: "inactive",
+      trim: true,
+      maxLength: 150,
     },
-    roles: {
-      type: Array,
-      default: [],
+    description: {
+      type: String,
+      trim: true,
+      maxLength: 150,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {
     timestamps: true,
-    collation: COLLECTION_NAME,
+    collection: COLLECTION_NAME,
   }
 );
 

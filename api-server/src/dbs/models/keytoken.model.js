@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const DOCUMENT_NAME = "Key";
-const COLLECTION_NAME = "keys";
+const COLLECTION_NAME = "Keys";
 
 const keytokenSchema = new Schema(
   {
@@ -16,9 +16,13 @@ const keytokenSchema = new Schema(
       type: String,
       required: true,
     },
-    refreshToken: {
+    refreshTokensUsed: {
       type: Array,
       default: [],
+    },
+    refreshToken: {
+      type: String,
+      required: true,
     },
   },
   {

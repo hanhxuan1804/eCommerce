@@ -1,0 +1,6 @@
+@url_dev=http://localhost:3001/v1/api
+
+## 
+GET {{url_dev}}/shop
+Content-Type: application/json
+x-api-key: 96954d273079ed28f1026ca4f5b6525285764d6e8101e6643033fdfa6a17d9303c284c0088438124d037032dd830b655318456a28365c2ef92d8c7386ea9adca
