@@ -15,6 +15,7 @@ const dev = {
     APIKEY: "x-api-key",
     CLIENT_ID: "x-client-id",
     AUTHORIZATION: "authorization",
+    REFRESHTOKEN: "x-refresh-token"
   },
 };
 
@@ -35,6 +36,7 @@ const prod ={
     APIKEY: "x-api-key",
     CLIENT_ID: "x-client-id",
     AUTHORIZATION: "authorization",
+    REFRESHTOKEN: "x-refresh-token"
   },
 };
 

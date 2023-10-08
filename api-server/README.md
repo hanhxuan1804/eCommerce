@@ -6,6 +6,52 @@
 - *x-client-id: user._id*
 - *authorization: beer "Your accessToken"*
 
+### Authentication
+
+1. **Signin:**
+   req.body: {
+   - email: sampleemail@gmail.com
+     password: samplepassword
+     }
+2. **Signup**
+   req.body: {
+   - name:
+   - email:
+   - password:
+   }
+
+### Shops
+
+1. **CreateShop**
+   req.body:{
+   - name:
+   - address:
+   - phone:
+   - decription:
+   }
+2. **Update**
+   req.params: id
+   req.body:{
+   - name:
+   - address:
+   - phone:
+   - decription:
+   }
+
+### Products
+
+1. **CreateProduct**
+   req.body{
+   - product_name,
+   - product_price,
+   - product_description,
+   - product_thumbnail,
+   - product_quantity,
+   - product_category,
+   - product_attributes: { *depend on category*  }
+   - product_shop,
+   }
+
 ## Getting Started
 
 1. Clone the repository.

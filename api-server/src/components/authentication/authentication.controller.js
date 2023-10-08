@@ -13,13 +13,17 @@ class AuthenticationController {
   };
 
   refreshToken = async (req, res, next) => {
-    try {
       console.log(`[P]::refreshToken::`, req.body);
-      const data = await AuthenticationService.refreshToken(req.body);
-      return res.status(data.status).json(data.res);
-    } catch (error) {
-      next(error);
-    }
+      new OkResponse("Refresh token successfully !", await AuthenticationService.refreshToken({
+        refreshToken: req.refreshToken,
+        userId: req.userId,
+        keyStore: req.keyStore
+      })).send(res);
+  };
+
+  signOut = async (req, res, next) => {
+      console.log(`[P]::signOut::`, req.body);
+      new OkResponse("Sign out successfully !", await AuthenticationService.signOut(req.userId)).send(res);
   };
 }
 

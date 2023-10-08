@@ -24,6 +24,10 @@ const keytokenSchema = new Schema(
       type: String,
       required: true,
     },
+    expiredin: {
+      type: Date,
+      required: true,
+    },
   },
   {
     timestamps: true,
