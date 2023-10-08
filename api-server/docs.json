@@ -1,0 +1,302 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "E-Commerce API Project",
+        "description": "This is the API documentation for the E-Commerce project.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3001/api/v1",
+            "description": "Local server"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-api-key"
+            },
+            "ClientIdAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-client-id"
+            },
+            "AccessTokenAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "authorization"
+            },
+            "RefreshTokenAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-refresh-token"
+            }
+        }
+    },
+    "security": [
+        {
+            "ApiKeyAuth": [],
+            "ClientIdAuth": [],
+            "AccessTokenAuth": []
+        }
+    ],
+    "paths": {
+        "/signin": {
+            "post": {
+                "summary": "Sign in to the E-Commerce API",
+                "requestBody": {
+                    "description": "The user's email and password",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "sampleemail@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "samplepassword"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful sign in",
+                        "headers": {
+                            "authorization": {
+                                "description": "The user's access token",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "beer YourAccessToken"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "summary": "Sign up for the E-Commerce API",
+                "requestBody": {
+                    "description": "The user's name, email, and password",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful sign up"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/shops": {
+            "post": {
+                "summary": "Create a shop",
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "ClientIdAuth": [],
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "The shop's name, address, phone, and description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "My Shop"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "555-555-5555"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "This is my shop"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful shop creation"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/shops/{id}": {
+            "put": {
+                "summary": "Update a shop",
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "ClientIdAuth": [],
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the shop to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The shop's name, address, phone, and description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "My Shop"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "555-555-5555"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "This is my shop"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful shop update"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/products": {
+            "post": {
+                "summary": "Create a product",
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "ClientIdAuth": [],
+                        "AccessTokenAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "The product's name, price, description, thumbnail, quantity, category, attributes, and shop",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string",
+                                        "example": "My Product"
+                                    },
+                                    "product_price": {
+                                        "type": "number",
+                                        "example": 9.99
+                                    },
+                                    "product_description": {
+                                        "type": "string",
+                                        "example": "This is my product"
+                                    },
+                                    "product_thumbnail": {
+                                        "type": "string",
+                                        "example": "https://example.com/product.jpg"
+                                    },
+                                    "product_quantity": {
+                                        "type": "number",
+                                        "example": 10
+                                    },
+                                    "product_category": {
+                                        "type": "string",
+                                        "example": "Electronics"
+                                    },
+                                    "product_attributes": {
+                                        "type": "object",
+                                        "example": {}
+                                    },
+                                    "product_shop": {
+                                        "type": "string",
+                                        "example": "1234567890"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful product creation"
+                        },
+                        "401": {
+                            "description": "Unauthorized"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
