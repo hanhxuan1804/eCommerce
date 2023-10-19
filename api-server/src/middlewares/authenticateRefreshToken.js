@@ -1,6 +1,7 @@
 const {
   NotFoundResponeError,
 } = require("../core/error.response");
+const { Keys } = require("../dbs/models");
 
 const authenticateRefreshToken = async (req, res, next) => {
   const refreshToken = req.headers["x-refresh-token"];

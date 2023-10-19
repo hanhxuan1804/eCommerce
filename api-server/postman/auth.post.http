@@ -4,7 +4,6 @@
 POST {{url_dev}}/auth/signup
 Content-Type: application/json
 x-api-key: 96954d273079ed28f1026ca4f5b6525285764d6e8101e6643033fdfa6a17d9303c284c0088438124d037032dd830b655318456a28365c2ef92d8c7386ea9adca
-
 {
     "email": "nhanhxuan3@gmail.com",
     "password": "123456",

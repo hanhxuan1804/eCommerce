@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { schema } = require("./shop.model");
+const { default: slugify } = require("slugify");
 
 const DOCUMENT_NAME = "Product";
 const COLLECTION_NAME = "Products";
@@ -9,6 +9,10 @@ const productSchema = new Schema(
     productName: {
       type: String,
       required: true,
+      trim: true,
+    },
+    productSlug: {
+      type: String,
       trim: true,
     },
     productPrice: {
@@ -42,15 +46,39 @@ const productSchema = new Schema(
     },
     productRating: {
       type: Number,
-      default: 0,
+      default: 4.5,
+      min: [1, "Rating must be at least 1"],
+      max: [5, "Rating must can not be more than 5"],
+      set: (val) => Math.round(val * 10) / 10,
     },
     productAttributes: {
       type: Schema.Types.Mixed,
       default: {},
     },
+    productVariations: {
+      type: Array,
+      default: [],
+    },
+    isDraft: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
+    isPublished: {
+      type: Boolean,
+      default: false,
+      index: true,
+        },
   },
   { timestamps: true, collection: COLLECTION_NAME }
 );
+
+//Docomment middleware before save, update, create, findOneAndUpdate, findOneAndDelete, updateOne, updateMany, deleteOne, deleteMany, aggregate
+productSchema.pre("save", function (next) {
+  this.productSlug = slugify(this.productName, { lower: true });
+  next();
+});
+
 
 const electronicsSchema = new Schema(
   {

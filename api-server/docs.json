@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3001/api/v1",
+            "url": "http://localhost:3001/v1/api",
             "description": "Local server"
         }
     ],
@@ -43,7 +43,7 @@
         }
     ],
     "paths": {
-        "/signin": {
+        "/auth/signin": {
             "post": {
                 "summary": "Sign in to the E-Commerce API",
                 "requestBody": {
@@ -56,11 +56,11 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "sampleemail@gmail.com"
+                                        "example": "nhanhxuan3@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "samplepassword"
+                                        "example": "123456"
                                     }
                                 }
                             }
@@ -70,12 +70,29 @@
                 "responses": {
                     "200": {
                         "description": "Successful sign in",
-                        "headers": {
-                            "authorization": {
-                                "description": "The user's access token",
+                        "content": {
+                            "application/json": {
                                 "schema": {
-                                    "type": "string",
-                                    "example": "beer YourAccessToken"
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sign in successful"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                                },
+                                                "refresh_token": {
+                                                    "type": "string",
+                                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -86,7 +103,7 @@
                 }
             }
         },
-        "/signup": {
+        "/auth/signup": {
             "post": {
                 "summary": "Sign up for the E-Commerce API",
                 "requestBody": {

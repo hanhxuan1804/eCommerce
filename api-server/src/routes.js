@@ -22,12 +22,10 @@ router.get("/v1/api", (req, res, next) => {
 router.use("/v1/api/auth", authRouter);
 router.use(
   "/v1/api/shops",
-  passport.authenticate("jwt", { session: false }),
   shopRouter
 );
 router.use(
   "/v1/api/products",
-  passport.authenticate("jwt", { session: false }),
   productRouter
 );
 
