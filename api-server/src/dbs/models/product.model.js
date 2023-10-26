@@ -6,56 +6,56 @@ const COLLECTION_NAME = "Products";
 
 const productSchema = new Schema(
   {
-    productName: {
+    product_name: {
       type: String,
       required: true,
       trim: true,
     },
-    productSlug: {
+    product_slug: {
       type: String,
       trim: true,
     },
-    productPrice: {
+    product_price: {
       type: Number,
       required: true,
       trim: true,
     },
-    productThumbnail: {
+    product_thumbnail: {
       type: String,
       required: true,
       trim: true,
     },
-    productDescription: {
+    product_description: {
       type: String,
       trim: true,
     },
-    productQuantity: {
+    product_quantity: {
       type: Number,
       required: true,
       trim: true,
     },
-    productCategory: {
+    product_category: {
       type: String,
       required: true,
       enum: ["Electronics", "Clothes", "Furniture", "Others"],
     },
-    productShop: {
+    product_shop: {
       type: Schema.Types.ObjectId,
       ref: "Shop",
       required: true,
     },
-    productRating: {
+    product_rating: {
       type: Number,
       default: 4.5,
       min: [1, "Rating must be at least 1"],
       max: [5, "Rating must can not be more than 5"],
       set: (val) => Math.round(val * 10) / 10,
     },
-    productAttributes: {
+    product_attributes: {
       type: Schema.Types.Mixed,
       default: {},
     },
-    productVariations: {
+    product_variations: {
       type: Array,
       default: [],
     },
@@ -64,18 +64,18 @@ const productSchema = new Schema(
       default: true,
       index: true,
     },
-    isPublished: {
+    ispublished: {
       type: Boolean,
       default: false,
       index: true,
-        },
+    },
   },
   { timestamps: true, collection: COLLECTION_NAME }
 );
 
 //Docomment middleware before save, update, create, findOneAndUpdate, findOneAndDelete, updateOne, updateMany, deleteOne, deleteMany, aggregate
 productSchema.pre("save", function (next) {
-  this.productSlug = slugify(this.productName, { lower: true });
+  this.product_slug = slugify(this.product_name, { lower: true });
   next();
 });
 
@@ -111,7 +111,7 @@ const electronicsSchema = new Schema(
       required: true,
       trim: true,
     },
-    powerSource: {
+    power_source: {
       type: String,
       trim: true,
     },
@@ -139,6 +139,10 @@ const clothesSchema = new Schema(
       type: String,
       trim: true,
     },
+    material: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true, collection: "Clothes" }
 );
@@ -162,7 +166,7 @@ const furnitureSchema = new Schema(
       type: String,
       trim: true,
     },
-    powerSource: {
+    power_source: {
       type: String,
       trim: true,
     },

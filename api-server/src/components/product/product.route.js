@@ -10,9 +10,9 @@ router.get("/search/:keyword", asyncHandler(ProductController.searchProduct));
 
 //auth 
 router.use(passport.authenticate("jwt", { session: false }));
-
-
-router.post("/create", asyncHandler(ProductController.createProduct));
+//POST//
+router.post("/", asyncHandler(ProductController.createProduct));
+router.patch("/:productId", asyncHandler(ProductController.updateProduct));
 //QUERY//
 router.get("/drafts/:productShop", asyncHandler(ProductController.getDraftsForShop));
 router.get("/published/:productShop", asyncHandler(ProductController.getPublishedForShop));

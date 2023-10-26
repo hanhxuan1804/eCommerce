@@ -18,7 +18,14 @@ const {
   findAllProducts,
   findProductById,
   searchProduct,
+  updateProductById,
 } = require("../../dbs/models/repositories/product.repo");
+const {
+  removeUndefinedAndNull,
+  removeUndefinedAndNullNestedObject,
+  getInfoData,
+  unGetInfoData,
+} = require("../../utils");
 
 //define product factory
 
@@ -45,57 +52,80 @@ class ProductFactory {
     //create product
     return await new productClass(payload).createProduct();
   }
-  static async findAllProducts({limit = 50, sort = "ctime", page =1, filter = { isPublished: true }}) {
-    return await findAllProducts({ limit, sort, filter, page
-      , select: ["productName", "productPrice", "productThumbnail"]
-    })
+  static async updateProduct(type, product_id, payload, user) {
+    //check if shop is valid
+    const shop = await shopModel.findById(payload.product_shop);
+    if (!shop) throw new BadRequestResponeError("Invalid shop");
+    const checkShop = shop.user.toString() === user._id.toString();
+    if (!checkShop) throw new BadRequestResponeError("Shop not belong to user");
+    //check if product category is valid
+    const productClass = ProductFactory.productsRegistery[type];
+    if (!productClass)
+      throw new BadRequestResponeError("Invalid product category");
+
+    return await new productClass(payload).updateProduct(product_id);
   }
-  static async findProduct({ productId, unSelect = [] }) {
+
+  static async findAllProducts({
+    limit = 50,
+    sort = "ctime",
+    page = 1,
+    filter = { isPublished: true },
+  }) {
+    return await findAllProducts({
+      limit,
+      sort,
+      filter,
+      page,
+      select: ["product_name", "product_price", "product_thumbnail"],
+    });
+  }
+  static async findProduct({ product_id, unSelect = [] }) {
     unSelect = unSelect.concat(["__v", "isDraft", "isPublished"]);
-    return await findProductById({ productId, unSelect });
+    return await findProductById({ product_id, unSelect });
   }
-  static async searchProduct({ keyword , unSelect = [] }) {
+  static async searchProduct({ keyword, unSelect = [] }) {
     unSelect = unSelect.concat(["__v", "isDraft", "isPublished"]);
     return await searchProduct({ keyword, unSelect });
   }
   //QUERY//
-  static async findAllDraftsForShop({ productShop, skip = 0, limit = 60 }) {
-    const query = { productShop, isDraft: true };
+  static async findAllDraftsForShop({ product_shop, skip = 0, limit = 60 }) {
+    const query = { product_shop, isDraft: true };
     return await findAllDraftsOfShop({ query, skip, limit });
   }
-  static async findAllPublishedForShop({ productShop, skip = 0, limit = 60 }) {
-    const query = { productShop, isPublished: true };
+  static async findAllPublishedForShop({ product_shop, skip = 0, limit = 60 }) {
+    const query = { product_shop, isPublished: true };
     return await findAllPublishedOfShop({ query, skip, limit });
   }
   //END QUERY//
   //PUT//
-  static async publishProduct({ productId, user, productShop }) {
+  static async publishProduct({ product_id, user, product_shop }) {
     //check if shop is belong to user
-    const shop = await shopModel.findById(productShop);
+    const shop = await shopModel.findById(product_shop);
     if (!shop) throw new BadRequestResponeError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
     if (!checkShop)
       throw new UnauthorizedResponseError("Shop not belong to user");
     //publish product
     const modifiedCount = await publishProductById({
-      productId,
-      productShop,
+      product_id,
+      product_shop,
     });
     console.log(modifiedCount);
     if (!modifiedCount) throw new BadRequestResponeError("Invalid product");
     return modifiedCount;
   }
-  static async unpublishProduct({ productId, user, productShop }) {
+  static async unpublishProduct({ product_id, user, product_shop }) {
     //check if shop is belong to user
-    const shop = await shopModel.findById(productShop);
+    const shop = await shopModel.findById(product_shop);
     if (!shop) throw new BadRequestResponeError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
     if (!checkShop)
       throw new UnauthorizedResponseError("Shop not belong to user");
     //unpublish product
     const modifiedCount = await unpublishProductById({
-      productId,
-      productShop,
+      product_id,
+      product_shop,
     });
     if (!modifiedCount) throw new BadRequestResponeError("Invalid product");
     return modifiedCount;
@@ -119,22 +149,24 @@ class Product {
     this.product_description = product_description;
     this.product_thumbnail = product_thumbnail;
     this.product_quantity = product_quantity;
-    this.profuct_category = product_category;
+    this.product_category = product_category;
     this.product_attributes = product_attributes;
     this.product_shop = product_shop;
   }
-
+  //define method to create product
   async createProduct(product_id) {
     return await productModel.create({
+      ...this,
       _id: product_id,
-      productName: this.product_name,
-      productPrice: this.product_price,
-      productDescription: this.product_description,
-      productThumbnail: this.product_thumbnail,
-      productQuantity: this.product_quantity,
-      productCategory: this.profuct_category,
-      productAttributes: this.product_attributes,
-      productShop: this.product_shop,
+    });
+  }
+  //define method to update product
+  async updateProduct(product_id, payload) {
+    return await updateProductById({
+      product_id: product_id,
+      payload,
+      model: productModel,
+      unSelect: ["__v", "createdAt", "updatedAt", "isDraft", "isPublished"],
     });
   }
 }
@@ -153,6 +185,20 @@ class Electronics extends Product {
       throw new BadRequestResponeError("Failed to create new product");
     return newProduct;
   }
+  async updateProduct(product_id) {
+    const objectParams = removeUndefinedAndNullNestedObject(this);
+    if (objectParams.product_attributes) {
+      const newAttributes = await updateProductById({
+        product_id: product_id,
+        payload: objectParams.product_attributes,
+        model: electronicsModel,
+        unSelect: ["__v", "_id", "createdAt", "updatedAt"],
+      });
+      objectParams.product_attributes = newAttributes;
+    }
+    const updateClothes = super.updateProduct(product_id, objectParams);
+    return updateClothes;
+  }
 }
 
 //define sub-class for clothes
@@ -166,6 +212,20 @@ class Clothes extends Product {
       throw new BadRequestResponeError("Failed to create new product");
     return newProduct;
   }
+  async updateProduct(product_id) {
+    const objectParams = removeUndefinedAndNullNestedObject(this);
+    if (objectParams.product_attributes) {
+      const newAttributes = await updateProductById({
+        product_id: product_id,
+        payload: objectParams.product_attributes,
+        model: clothesModel,
+        unSelect: ["__v", "_id", "createdAt", "updatedAt"],
+      });
+      objectParams.product_attributes = newAttributes;
+    }
+    const updateClothes = super.updateProduct(product_id, objectParams);
+    return updateClothes;
+  }
 }
 //define sub-class for furniture
 class Furniture extends Product {
@@ -178,6 +238,23 @@ class Furniture extends Product {
     if (!newProduct)
       throw new BadRequestResponeError("Failed to create new product");
     return newProduct;
+  }
+  async updateProduct(product_id) {
+    const objectParams = removeUndefinedAndNull(this);
+    objectParams.product_attributes = removeUndefinedAndNull(
+      objectParams.product_attributes
+    );
+    if (objectParams.product_attributes) {
+      const newAttributes = await updateProductById({
+        product_id: product_id,
+        payload: objectParams.product_attributes,
+        model: furnitureModel,
+        unSelect: ["__v", "_id", "createdAt", "updatedAt"],
+      });
+      objectParams.product_attributes = newAttributes;
+    }
+    const updateClothes = super.updateProduct(product_id, objectParams);
+    return updateClothes;
   }
 }
 //define sub-class for other products
@@ -193,6 +270,23 @@ class OtherProducts extends Product {
     if (!newProduct)
       throw new BadRequestResponeError("Failed to create new product");
     return newProduct;
+  }
+  async updateProduct(product_id) {
+    const objectParams = removeUndefinedAndNull(this);
+    objectParams.product_attributes = removeUndefinedAndNull(
+      objectParams.product_attributes
+    );
+    if (objectParams.product_attributes) {
+      const newAttributes = await updateProductById({
+        product_id: product_id,
+        payload: objectParams.product_attributes,
+        model: otherProductsModel,
+        unSelect: ["__v", "_id", "createdAt", "updatedAt"],
+      });
+      objectParams.product_attributes = newAttributes;
+    }
+    const updateClothes = super.updateProduct(product_id, objectParams);
+    return updateClothes;
   }
 }
 

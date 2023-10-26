@@ -13,7 +13,7 @@ class ShopController {
     ).send(res);
   };
   getShop = async (req, res, next) => {
-    console.log(`[P]::getShop::`, req.user.email);
+    console.log(`[G]::getShop::`, req.user.email);
     new OkResponse(
       "Get shop successfully !",
       await ShopService.getShop({
@@ -22,7 +22,7 @@ class ShopController {
     ).send(res);
   };
   getShopById = async (req, res, next) => {
-    console.log(`[P]::getShopById::`, req.params.id);
+    console.log(`[G]::getShopById::`, req.params.id);
     new OkResponse(
       "Get shop by id successfully !",
       await ShopService.getShopById({
@@ -32,7 +32,7 @@ class ShopController {
     ).send(res);
   };
   updateShopById = async (req, res, next) => {
-    console.log(`[P]::updateShopById::`, req.params.id, req.body);
+    console.log(`[PUT]::updateShopById::`, req.params.id, req.body);
     new OkResponse(
       "Update shop by id successfully !",
       await ShopService.updateShopById({

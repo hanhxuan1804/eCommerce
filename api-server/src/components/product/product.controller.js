@@ -5,40 +5,50 @@ class ProductController {
   createProduct = async (req, res, next) => {
     console.log(`[P]::createProduct::`, req.body);
     const { product_category } = req.body;
-    new CreatedResponse({
-      message: "Product created successfully",
-      metadata: await ProductServices.createProduct(
+    new CreatedResponse(
+      "Product created successfully",
+      await ProductServices.createProduct(product_category, req.body, req.user)
+    ).send(res);
+  };
+  //update product
+  updateProduct = async (req, res, next) => {
+    console.log(`[P]::updateProduct::`, req.params, req.body);
+    const { product_category } = req.body;
+    new OkResponse(
+      "Product updated successfully",
+      await ProductServices.updateProduct(
         product_category,
+        req.params.productId,
         req.body,
         req.user
-      ),
-    }).send(res);
+      )
+    ).send(res);
   };
   findAllProducts = async (req, res, next) => {
-    console.log(`[P]::findAllProducts::`, req.query);
-    new OkResponse({
-      message: "Get all products successfully",
-      metadata: await ProductServices.findAllProducts(req.query),
-    }).send(res);
-  }
+    console.log(`[G]::findAllProducts::`, req.query);
+    new OkResponse(
+      "Get all products successfully",
+      await ProductServices.findAllProducts(req.query)
+    ).send(res);
+  };
   findProductById = async (req, res, next) => {
-    console.log(`[P]::findProductById::`, req.params);
-    new OkResponse({
-      message: "Get product successfully",
-      metadata: await ProductServices.findProduct({
-        productId: req.params.productId
-      }),
-    }).send(res);
-  }
+    console.log(`[G]::findProductById::`, req.params);
+    new OkResponse(
+      "Get product successfully",
+      await ProductServices.findProduct({
+        productId: req.params.productId,
+      })
+    ).send(res);
+  };
   searchProduct = async (req, res, next) => {
-    console.log(`[P]::searchProduct::`, req.params);
-    new OkResponse({
-      message: "Search product successfully",
-      metadata: await ProductServices.searchProduct({
+    console.log(`[G]::searchProduct::`, req.params);
+    new OkResponse(
+      "Search product successfully",
+      await ProductServices.searchProduct({
         keyword: req.params.keyword,
-      }),
-    }).send(res);
-  }
+      })
+    ).send(res);
+  };
   //QUERY//
   /**
    * @description Get all drafts of a shop
@@ -48,17 +58,17 @@ class ProductController {
    * @returns { Object } { message, metadata }
    */
   getDraftsForShop = async (req, res, next) => {
-    console.log(`[P]::getDraftsForShop::`, { ...req.params, ...req.query});
+    console.log(`[G]::getDraftsForShop::`, { ...req.params, ...req.query });
     const { productShop } = req.params;
     const { skip, limit } = req.query;
-    new OkResponse({
-      message: "Get drafts successfully",
-      metadata: await ProductServices.findAllDraftsForShop({
-        productShop,
+    new OkResponse(
+      "Get drafts successfully",
+      await ProductServices.findAllDraftsForShop({
+        product_shop: productShop,
         skip,
         limit,
-      }),
-    }).send(res);
+      })
+    ).send(res);
   };
   /**
    * @description Get all published products of a shop
@@ -68,17 +78,17 @@ class ProductController {
    * @returns { Object } { message, metadata }
    */
   getPublishedForShop = async (req, res, next) => {
-    console.log(`[P]::getPublishedForShop::`, { ...req.params, ...req.query });
+    console.log(`[G]::getPublishedForShop::`, { ...req.params, ...req.query });
     const { productShop } = req.params;
     const { skip, limit } = req.query;
-    new OkResponse({
-      message: "Get published products successfully",
-      metadata: await ProductServices.findAllPublishedForShop({
-        productShop,
+    new OkResponse(
+      "Get published products successfully",
+      await ProductServices.findAllPublishedForShop({
+        product_shop: productShop,
         skip,
         limit,
-      }),
-    }).send(res);
+      })
+    ).send(res);
   };
   //END QUERY//
   //PUT//
@@ -89,16 +99,16 @@ class ProductController {
    * @returns { Object } { message, metadata }
    */
   publishProduct = async (req, res, next) => {
-    console.log(`[P]::publishProduct::`, req.params);
+    console.log(`[PUT]::publishProduct::`, req.params);
     const { productShop, productId } = req.params;
-    new OkResponse({
-      message: "Publish product successfully",
-      metadata: await ProductServices.publishProduct({
-        productId,
-        productShop,
+    new OkResponse(
+      "Publish product successfully",
+      await ProductServices.publishProduct({
+        product_id: productId,
+        product_shop: productShop,
         user: req.user,
-      }),
-    }).send(res);
+      })
+    ).send(res);
   };
   /**
    * @description Unpublish a product
@@ -107,16 +117,16 @@ class ProductController {
    * @returns { Object } { message, metadata }
    */
   unpublishProduct = async (req, res, next) => {
-    console.log(`[P]::unpublishProduct::`, req.params);
+    console.log(`[PUT]::unpublishProduct::`, req.params);
     const { productShop, productId } = req.params;
-    new OkResponse({
-      message: "Unpublish product successfully",
-      metadata: await ProductServices.unpublishProduct({
-        productId,
-        productShop,
+    new OkResponse(
+      "Unpublish product successfully",
+      await ProductServices.unpublishProduct({
+        product_id: productId,
+        product_shop: productShop,
         user: req.user,
-      }),
-    }).send(res);
+      })
+    ).send(res);
   };
   //END PUT//
 }

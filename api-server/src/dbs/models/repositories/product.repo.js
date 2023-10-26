@@ -15,8 +15,8 @@ const findAllPublishedOfShop = async ({ query, skip, limit }) => {
   return await queryproduct(query, skip, limit);
 };
 
-const publishProductById = async ({ productId, productShop }) => {
-  const product = await Product.findOne({ _id: productId, productShop })
+const publishProductById = async ({ product_id, product_shop }) => {
+  const product = await Product.findOne({ _id: product_id, product_shop })
     .lean()
     .exec();
   if (!product) return false;
@@ -24,14 +24,14 @@ const publishProductById = async ({ productId, productShop }) => {
   product.isDraft = false;
   product.isPublished = true;
   const { modifiedCount } = await Product.updateOne(
-    { _id: productId, productShop },
+    { _id: product_id, product_shop },
     product
   );
 
   return modifiedCount;
 };
-const unpublishProductById = async ({ productId, productShop }) => {
-  const product = await Product.findOne({ _id: productId, productShop })
+const unpublishProductById = async ({ product_id, product_shop }) => {
+  const product = await Product.findOne({ _id: product_id, product_shop })
     .lean()
     .exec();
   if (!product) return false;
@@ -39,14 +39,14 @@ const unpublishProductById = async ({ productId, productShop }) => {
   product.isDraft = true;
   product.isPublished = false;
   const { modifiedCount } = await Product.updateOne(
-    { _id: productId, productShop },
+    { _id: product_id, product_shop },
     product
   );
   return modifiedCount;
 };
 const queryproduct = async (query, skip, limit) => {
   return await Product.find(query)
-    .populate("productShop", "name email -_id")
+    .populate("product_shop", "name email -_id")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)
@@ -74,27 +74,45 @@ const findAllProducts = async ({ limit, page, sort, filter, select }) => {
     .exec();
   return products;
 };
-const findProductById = async ({ productId, unSelect }) => {
-  const product = await Product.findById(productId)
-  .select(unGetSelectData(unSelect))
-  .populate("productShop", "name email -_id")
-  .lean()
-  .exec();
+const findProductById = async ({ product_id, unSelect }) => {
+  const product = await Product.findById(product_id)
+    .select(unGetSelectData(unSelect))
+    .populate("product_shop", "name email -_id")
+    .lean()
+    .exec();
   return product;
 };
 const searchProduct = async ({ keyword, unSelect }) => {
   const regexSearch = new RegExp(keyword, "i");
   const products = await Product.find({
     $or: [
-      { productName: { $regex: regexSearch } },
-      { productDescription: { $regex: regexSearch } },
+      { product_name: { $regex: regexSearch } },
+      { product_description: { $regex: regexSearch } },
     ],
-  }).select(unGetSelectData(unSelect))
+  })
+    .select(unGetSelectData(unSelect))
     .sort({ createdAt: -1 })
     .lean()
     .exec();
   return products;
-}
+};
+const updateProductById = async ({
+  product_id,
+  payload,
+  model,
+  isNew = true,
+  unSelect = [],
+}) => {
+  console.log(`[U]::updateProductById::`, {
+    product_id,
+    payload,
+    model,
+    isNew,
+  });
+  return await model
+    .findByIdAndUpdate(product_id, payload, { new: isNew })
+    .select(unGetSelectData(unSelect));
+};
 
 module.exports = {
   findAllDraftsOfShop,
@@ -104,4 +122,5 @@ module.exports = {
   findAllProducts,
   findProductById,
   searchProduct,
+  updateProductById,
 };
