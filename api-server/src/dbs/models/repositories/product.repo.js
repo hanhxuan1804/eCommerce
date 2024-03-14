@@ -6,13 +6,21 @@ const {
   OtherProducts,
 } = require("../product.model");
 const { getSelectData, unGetSelectData } = require("../../../utils");
+const sortObject = {
+  ctime: { createdAt: -1 },
+  relevancy: { createdAt: -1 },
+  "price-asc": { price: 1 },
+  "price-desc": { price: -1 },
+  rating: { rating: -1 },
+  sales: { sales: -1 },
+};
 
 const findAllDraftsOfShop = async ({ query, skip, limit }) => {
-  return await queryproduct(query, skip, limit);
+  return await queryProduct(query, skip, limit);
 };
 
 const findAllPublishedOfShop = async ({ query, skip, limit }) => {
-  return await queryproduct(query, skip, limit);
+  return await queryProduct(query, skip, limit);
 };
 
 const publishProductById = async ({ product_id, product_shop }) => {
@@ -44,7 +52,7 @@ const unpublishProductById = async ({ product_id, product_shop }) => {
   );
   return modifiedCount;
 };
-const queryproduct = async (query, skip, limit) => {
+const queryProduct = async (query, skip, limit) => {
   return await Product.find(query)
     .populate("product_shop", "name email -_id")
     .sort({ createdAt: -1 })
@@ -56,14 +64,6 @@ const queryproduct = async (query, skip, limit) => {
 
 const findAllProducts = async ({ limit, page, sort, filter, select }) => {
   const skip = (page - 1) * limit;
-  const sortObject = {
-    ctime: { createdAt: -1 },
-    relevancy: { createdAt: -1 }, //TODO: relevancy
-    "price-asc": { price: 1 },
-    "price-desc": { price: -1 },
-    rating: { rating: -1 },
-    sales: { sales: -1 },
-  };
   const sortBy = sortObject[sort];
   const products = await Product.find(filter)
     .sort(sortBy)
@@ -103,12 +103,6 @@ const updateProductById = async ({
   isNew = true,
   unSelect = [],
 }) => {
-  console.log(`[U]::updateProductById::`, {
-    product_id,
-    payload,
-    model,
-    isNew,
-  });
   return await model
     .findByIdAndUpdate(product_id, payload, { new: isNew })
     .select(unGetSelectData(unSelect));

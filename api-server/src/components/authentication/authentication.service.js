@@ -9,13 +9,13 @@ const {
   ConflictResponseError,
   InternalServerError,
   UnauthorizedResponseError,
-  BadRequestResponeError,
+  BadRequestResponseError,
 } = require("../../core/error.response");
 
 class AuthenticationService {
   static signUp = async ({ name, email, password }) => {
     if (!name || !email || !password) {
-      throw new BadRequestResponeError("Missing required fields");
+      throw new BadRequestResponseError("Missing required fields");
     }
     // Step 1: Check if email exists
     const existingUser = await Users.findOne({ email }).lean();
@@ -77,7 +77,7 @@ class AuthenticationService {
 
   static signIn = async ({ email, password, refreshToken = null }) => {
     if (!email || !password) {
-      throw new BadRequestResponeError("Missing required fields");
+      throw new BadRequestResponseError("Missing required fields");
     }
     const user = await Users.findOne({ email }).lean();
     if (!user) {

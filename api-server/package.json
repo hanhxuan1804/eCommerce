@@ -12,6 +12,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.3",
     "mongoose": "^7.5.2",
     "nodemailer": "^6.9.5",
     "passport": "^0.6.0",
@@ -28,5 +29,14 @@
   },
   "engines": {
     "node": ">=18.18.0"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@src": "src",
+    "@components": "src/components",
+    "@configs": "src/configs",
+    "@dbsModels": "src/dbs/models",
+    "@utils": "src/utils"
   }
+  
 }

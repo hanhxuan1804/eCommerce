@@ -7,7 +7,7 @@ const {
   Shops: shopModel,
 } = require("../../dbs/models");
 const {
-  BadRequestResponeError,
+  BadRequestResponseError,
   UnauthorizedResponseError,
 } = require("../../core/error.response");
 const {
@@ -26,6 +26,7 @@ const {
   getInfoData,
   unGetInfoData,
 } = require("../../utils");
+const { insertInventory } = require("../../dbs/models/repositories/inventory.repo");
 
 //define product factory
 
@@ -42,26 +43,26 @@ class ProductFactory {
   static async createProduct(type, payload, user) {
     //check if shop is valid
     const shop = await shopModel.findById(payload.product_shop);
-    if (!shop) throw new BadRequestResponeError("Invalid shop");
+    if (!shop) throw new BadRequestResponseError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
-    if (!checkShop) throw new BadRequestResponeError("Shop not belong to user");
+    if (!checkShop) throw new BadRequestResponseError("Shop not belong to user");
     //check if product category is valid
     const productClass = ProductFactory.productsRegistery[type];
     if (!productClass)
-      throw new BadRequestResponeError("Invalid product category");
+      throw new BadRequestResponseError("Invalid product category");
     //create product
     return await new productClass(payload).createProduct();
   }
   static async updateProduct(type, product_id, payload, user) {
     //check if shop is valid
     const shop = await shopModel.findById(payload.product_shop);
-    if (!shop) throw new BadRequestResponeError("Invalid shop");
+    if (!shop) throw new BadRequestResponseError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
-    if (!checkShop) throw new BadRequestResponeError("Shop not belong to user");
+    if (!checkShop) throw new BadRequestResponseError("Shop not belong to user");
     //check if product category is valid
     const productClass = ProductFactory.productsRegistery[type];
     if (!productClass)
-      throw new BadRequestResponeError("Invalid product category");
+      throw new BadRequestResponseError("Invalid product category");
 
     return await new productClass(payload).updateProduct(product_id);
   }
@@ -102,7 +103,7 @@ class ProductFactory {
   static async publishProduct({ product_id, user, product_shop }) {
     //check if shop is belong to user
     const shop = await shopModel.findById(product_shop);
-    if (!shop) throw new BadRequestResponeError("Invalid shop");
+    if (!shop) throw new BadRequestResponseError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
     if (!checkShop)
       throw new UnauthorizedResponseError("Shop not belong to user");
@@ -111,14 +112,13 @@ class ProductFactory {
       product_id,
       product_shop,
     });
-    console.log(modifiedCount);
-    if (!modifiedCount) throw new BadRequestResponeError("Invalid product");
+    if (!modifiedCount) throw new BadRequestResponseError("Invalid product");
     return modifiedCount;
   }
   static async unpublishProduct({ product_id, user, product_shop }) {
     //check if shop is belong to user
     const shop = await shopModel.findById(product_shop);
-    if (!shop) throw new BadRequestResponeError("Invalid shop");
+    if (!shop) throw new BadRequestResponseError("Invalid shop");
     const checkShop = shop.user.toString() === user._id.toString();
     if (!checkShop)
       throw new UnauthorizedResponseError("Shop not belong to user");
@@ -127,7 +127,7 @@ class ProductFactory {
       product_id,
       product_shop,
     });
-    if (!modifiedCount) throw new BadRequestResponeError("Invalid product");
+    if (!modifiedCount) throw new BadRequestResponseError("Invalid product");
     return modifiedCount;
   }
   //END PUT//
@@ -155,10 +155,18 @@ class Product {
   }
   //define method to create product
   async createProduct(product_id) {
-    return await productModel.create({
+    const newProduct = await productModel.create({
       ...this,
       _id: product_id,
     });
+    if (!newProduct)
+      throw new BadRequestResponseError("Failed to create new product");
+    insertInventory({
+      productId: newProduct._id,
+      stock: newProduct.product_quantity,
+      shop: newProduct.product_shop,
+    });
+    return newProduct;
   }
   //define method to update product
   async updateProduct(product_id, payload) {
@@ -179,10 +187,10 @@ class Electronics extends Product {
       this.product_attributes
     );
     if (!newElectronics)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     const newProduct = await super.createProduct(newElectronics._id);
     if (!newProduct)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     return newProduct;
   }
   async updateProduct(product_id) {
@@ -206,10 +214,10 @@ class Clothes extends Product {
   async createProduct() {
     const newClothes = await clothesModel.create(this.product_attributes);
     if (!newClothes)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     const newProduct = await super.createProduct(newClothes._id);
     if (!newProduct)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     return newProduct;
   }
   async updateProduct(product_id) {
@@ -232,11 +240,11 @@ class Furniture extends Product {
   async createProduct() {
     const newFurniture = await furnitureModel.create(this.product_attributes);
     if (!newFurniture)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
 
     const newProduct = await super.createProduct(newFurniture._id);
     if (!newProduct)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     return newProduct;
   }
   async updateProduct(product_id) {
@@ -264,11 +272,11 @@ class OtherProducts extends Product {
       this.product_attributes
     );
     if (!newOtherProducts)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
 
     const newProduct = await super.createProduct(newOtherProducts._id);
     if (!newProduct)
-      throw new BadRequestResponeError("Failed to create new product");
+      throw new BadRequestResponseError("Failed to create new product");
     return newProduct;
   }
   async updateProduct(product_id) {

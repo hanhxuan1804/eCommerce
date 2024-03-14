@@ -2,8 +2,8 @@ const { Shops } = require("../../dbs/models");
 const {
   ConflictResponseError,
   InternalServerError,
-  NotFoundResponeError,
-  BadRequestResponeError,
+  NotFoundResponseError,
+  BadRequestResponseError,
 } = require("../../core/error.response");
 const { Types } = require("mongoose");
 
@@ -32,29 +32,29 @@ class ShopService {
   static getShop = async ({ user }) => {
     const shop = await Shops.findOne({ email: user.email }).lean();
     if (!shop) {
-      throw new NotFoundResponeError("Shop not found !");
+      throw new NotFoundResponseError("Shop not found !");
     }
     return shop;
   };
   static getShopById = async ({ user, data }) => {
     if (!Types.ObjectId.isValid(data)) {
-      throw new NotFoundResponeError("Shop not found !");
+      throw new NotFoundResponseError("Shop not found !");
     }
     const shop = await Shops.findById(new Types.ObjectId(data)).lean();
     if (!shop) {
-      throw new NotFoundResponeError("Shop not found !");
+      throw new NotFoundResponseError("Shop not found !");
     }
     return shop;
   };
   static updateShopById = async ({ user, data, body }) => {
     if (!Types.ObjectId.isValid(data)) {
-      throw new BadRequestResponeError("Shop not found !");
+      throw new BadRequestResponseError("Shop not found !");
     }
     const shop = await Shops.findByIdAndUpdate(new Types.ObjectId(data), body, {
       new: true,
     }).lean();
     if (!shop) {
-      throw new NotFoundResponeError("Shop not found !");
+      throw new NotFoundResponseError("Shop not found !");
     }
     return shop;
   };

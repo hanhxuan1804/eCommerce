@@ -2,6 +2,7 @@ const Shops = require("./shop.model");
 const Users = require("./user.model");
 const Apikeys = require("./apikey.model");
 const Keys = require("./keytoken.model");
+const Inventories = require("./inventory.model");
 const {
   Product,
   Electronics,
@@ -20,4 +21,5 @@ module.exports = {
   Clothes,
   Furniture,
   OtherProducts,
+  Inventories,
 };
