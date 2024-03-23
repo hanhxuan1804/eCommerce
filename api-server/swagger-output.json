@@ -1,0 +1,903 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "eCommerce API",
+    "description": "API documentation for the eCommerce application"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001",
+      "description": "Development server"
+    },
+    {
+      "url": "https://ecommerce-api.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/api": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Sign up",
+        "description": "Endpoint to sign up",
+        "responses": {
+          "201": {
+            "description": "Some description...",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "age": {
+                      "type": "number",
+                      "example": 29
+                    },
+                    "about": {
+                      "$ref": "#/components/schemas/AuthResponse"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "age": {
+                      "type": "number",
+                      "example": 29
+                    },
+                    "about": {
+                      "$ref": "#/components/schemas/AuthResponse"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSignUp"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api/auth/signin": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Endpoint for authentication",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/auth/refresh": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Endpoint for authentication",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/auth/signout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Endpoint for authentication",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/shops/create": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Endpoints for shop",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/shops/get": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Endpoints for shop",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/shops/get/{id}": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Endpoints for shop",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/shops/update/{id}": {
+      "put": {
+        "tags": [
+          "Shop"
+        ],
+        "description": "Endpoints for shop",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/{productId}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/search/{keyword}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/drafts/{productShop}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productShop",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/published/{productShop}": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productShop",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/publish/{productShop}/{productId}": {
+      "put": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productShop",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/products/unpublish/{productShop}/{productId}": {
+      "put": {
+        "tags": [
+          "Product"
+        ],
+        "description": "Endpoints for product",
+        "parameters": [
+          {
+            "name": "productShop",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/create": {
+      "post": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/update/{discountId}": {
+      "put": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/delete/{discountId}": {
+      "delete": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/list/{shopId}": {
+      "get": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "shopId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/{shopId}/{discountId}": {
+      "get": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "shopId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/amount/{discountId}": {
+      "get": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/apply/{discountId}": {
+      "put": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/discounts/cancel/{discountId}": {
+      "put": {
+        "tags": [
+          "Discount"
+        ],
+        "description": "Endpoints for discount",
+        "parameters": [
+          {
+            "name": "discountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/add": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "summary": "Add product to cart",
+        "description": "Endpoint to add product to cart",
+        "parameters": [
+          {
+            "name": "product",
+            "in": "body",
+            "description": "Product to add object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "string",
+                  "example": "60c9e3e0b3d0c20015f2b3b8"
+                },
+                "shop_id": {
+                  "type": "string",
+                  "example": "60c9e3e0b3d0c20015f2b3b8"
+                },
+                "quantity": {
+                  "type": "number",
+                  "example": 1
+                },
+                "price": {
+                  "type": "number",
+                  "example": 10.5
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Product name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product added to cart successfully"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/api/cart/reduce": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/increase": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/remove": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/details": {
+      "get": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/clear": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/cart/change-state": {
+      "post": {
+        "tags": [
+          "Cart"
+        ],
+        "description": "Endpoints for cart",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "example": "Bearer {token}"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
+    "schemas": {
+      "UserSignUp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "JohnDoe@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "secretPassword"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "xml": {
+          "name": "UserSignUp"
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "65fe943c453954a263efd935"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "email": {
+                "type": "string",
+                "example": "JohnDoe@gmail.com"
+              },
+              "roles": {
+                "type": "array",
+                "example": [
+                  "001"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "_id",
+              "name",
+              "email",
+              "roles"
+            ]
+          },
+          "token": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "example": "jwt-token"
+              },
+              "refreshToken": {
+                "type": "string",
+                "example": "jwt-token"
+              }
+            },
+            "required": [
+              "accessToken",
+              "refreshToken"
+            ]
+          }
+        },
+        "required": [
+          "user",
+          "token"
+        ],
+        "xml": {
+          "name": "AuthResponse"
+        }
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "User created successfully"
+          },
+          "code": {
+            "type": "string",
+            "example": "201xxx"
+          },
+          "metadata": {
+            "type": "string",
+            "example": "metadata"
+          }
+        },
+        "required": [
+          "message",
+          "code",
+          "metadata"
+        ],
+        "xml": {
+          "name": "Response"
+        }
+      }
+    }
+  }
+}

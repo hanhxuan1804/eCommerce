@@ -15,10 +15,15 @@ app.use(helmet()); // secure apps by setting various HTTP headers
 app.use(compression()); // compress all responses, gzip compression, reduce size of response body
 
 // Load routes
-app.use("/", require("./routes"));
+app.use(
+  require("./routes")
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
+);
 
 // Set up db
-require("./dbs/init.mongodb");
+require("./dbs/init.mongodb").connect();
 //require('./helpers/check.connect').checkOverload();
 
 // Set up error handling
@@ -30,10 +35,10 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   const statusCode = err.status || 500;
   res.status(statusCode).json({
-    status: 'error',
+    status: "error",
     code: statusCode,
-    stack: process.env.NODE_ENV === 'production' ? '' : err.stack,
-    message: err.message || 'Internal server error',
+    stack: process.env.NODE_ENV === "production" ? "" : err.stack,
+    message: err.message || "Internal server error",
   });
 });
 

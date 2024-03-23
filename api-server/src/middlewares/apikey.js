@@ -5,14 +5,15 @@ const HEADER = {
   CLIENT_ID: "x-client-id",
   AUTHORIZATION: "authorization",
 };
+// ApiKeyService.generateApiKey("0000");
 const checkApiKey = async (req, res, next) => {
   const key = req.headers[HEADER.APIKEY]?.toString();
   if (!key) {
-    throw new ForbiddenResponseError("Forbidden access !");
+    throw new ForbiddenResponseError("Forbidden access ! You don't have api key, please contact admin to get one.");
   }
   const apikeyObj = await ApiKeyService.getApiKey(key);
   if (!apikeyObj) {
-    throw new ForbiddenResponseError("Forbidden access !");
+    throw new ForbiddenResponseError("Forbidden access ! Invalid api key. Please contact admin to get one.");
   }
   req.apikeyObj = apikeyObj;
   next();

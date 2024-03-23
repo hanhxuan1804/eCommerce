@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
-const { dbstring } = require("../configs/config");
+const { dbstring } = require("../configs");
 class Database {
   constructor() {
-    this.connect();
+    // this.connect();
   }
 
-  connect(
+  async connect(
     type = "mongodb" //default: mongodb
   ) {
     //if dev:
     mongoose.set("debug", true);
     mongoose.set("debug", { color: true });
-    mongoose
+    await mongoose
       .connect(dbstring)
       .then((_) => {
         console.log(`Connected to mongodb success!`);
@@ -19,7 +19,9 @@ class Database {
       })
       .catch((err) => console.log(err));
   }
-
+  async close() {
+   await mongoose.connection.close();
+  }
   static getInstance() {
     if (!Database.instance) {
       Database.instance = new Database();

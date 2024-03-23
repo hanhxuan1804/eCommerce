@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("node:crypto");
 const KeyTokenService = require("./keytoken.service");
-const { appuserroles } = require("../../configs/config");
+const { appuserroles } = require("../../configs");
 const { getInfoData } = require("../../utils");
 const {
   ConflictResponseError,

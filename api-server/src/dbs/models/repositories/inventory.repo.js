@@ -1,5 +1,4 @@
-const Inventories = require("../models/inventory.model");
-
+const { Inventories } = require("../index");
 const insertInventory = async ({
   productId,
   location = "unknown",

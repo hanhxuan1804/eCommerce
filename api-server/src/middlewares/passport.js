@@ -4,7 +4,7 @@ const passport = require("passport");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const { UnauthorizedResponseError } = require("../core/error.response");
 const { Types } = require("mongoose");
-const HEADER = require("../configs/config").reqheader;
+const HEADER = require("../configs").reqheader;
 
 const loadPublicKey = async (userId) => {
   const key = await Keys.findOne({

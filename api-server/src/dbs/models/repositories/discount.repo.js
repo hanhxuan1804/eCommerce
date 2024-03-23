@@ -1,6 +1,6 @@
 "use strict";
-const Discount = require("@models/discount.model");
-const { getSelect, unGetSelectData, convertStringToMongoId } = require("@utils/index");
+const Discount = require("../discount.model");
+const { getSelect, unGetSelectData, convertStringToMongoId } = require("../../../utils");
 const sortObject = {
   ctime: { createdAt: -1 },
   relevancy: { createdAt: -1 }, 

@@ -5,7 +5,7 @@ const {
   Furniture,
   OtherProducts,
 } = require("../product.model");
-const { getSelectData, unGetSelectData } = require("../../../utils");
+const { getSelectData, unGetSelectData, convertStringToMongoId } = require("../../../utils");
 const sortObject = {
   ctime: { createdAt: -1 },
   relevancy: { createdAt: -1 },
@@ -74,7 +74,7 @@ const findAllProducts = async ({ limit, page, sort, filter, select }) => {
     .exec();
   return products;
 };
-const findProductById = async ({ product_id, unSelect }) => {
+const findProductById = async ({ product_id, unSelect = [] }) => {
   const product = await Product.findById(product_id)
     .select(unGetSelectData(unSelect))
     .populate("product_shop", "name email -_id")
@@ -82,7 +82,7 @@ const findProductById = async ({ product_id, unSelect }) => {
     .exec();
   return product;
 };
-const searchProduct = async ({ keyword, unSelect }) => {
+const searchProduct = async ({ keyword, unSelect = [] }) => {
   const regexSearch = new RegExp(keyword, "i");
   const products = await Product.find({
     $or: [
@@ -108,6 +108,10 @@ const updateProductById = async ({
     .select(unGetSelectData(unSelect));
 };
 
+const getProductById = async (product_id) => {
+    return await Product.findOne({ _id: convertStringToMongoId(product_id)}).lean().exec();
+}
+
 module.exports = {
   findAllDraftsOfShop,
   publishProductById,
@@ -117,4 +121,5 @@ module.exports = {
   findProductById,
   searchProduct,
   updateProductById,
+  getProductById
 };

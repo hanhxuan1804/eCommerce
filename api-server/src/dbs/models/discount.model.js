@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-
+const { ObjectId } = Schema.Types;
 const DOCUMENT_NAME = "Discount";
 const COLLECTION_NAME = "Discounts";
 

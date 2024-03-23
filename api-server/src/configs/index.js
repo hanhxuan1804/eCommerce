@@ -1,4 +1,9 @@
 const dev = {
+  appname: "eCommerceAPI",
+  api: {
+    version: process.env.DEV_API_VERSION || "v1",
+    url: process.env.DEV_API_URL || "http://localhost:3001/v1/api",
+  },
   port: process.env.DEV_PORT || 3000,
   dbstring: process.env.DEV_DB_STRING || 'mongodb://localhost:27017/eCommerce',
   nodemailercfg: {
@@ -20,6 +25,11 @@ const dev = {
 };
 
 const prod ={
+  appname: "eCommerceAPI",
+  api: {
+    version: process.env.PROD_API_VERSION || "v1",
+    url: process.env.PROD_API_URL || "http://localhost:3001/v1/api",
+  },
   port: process.env.PROD_PORT || 3000,
   dbstring: process.env.PROD_DB_STRING || 'mongodb://localhost:27017/eCommerce',
   nodemailercfg: {

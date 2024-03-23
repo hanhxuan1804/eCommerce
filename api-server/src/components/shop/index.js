@@ -1,4 +1,4 @@
-const router = require('./shop.router')
+const router = require('./shop.route')
 
 module.exports = {
     router

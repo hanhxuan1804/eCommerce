@@ -1,19 +1,17 @@
 const {
   checkShopExist,
   checkShopOwner,
-} = require("@models/repositories/shop.repo");
-const {
-  findAllDiscountCodeUnselect,
-} = require("@models/repositories/discount.repo");
-const { findAllProducts } = require("@models/repositories/product.repo");
+} = require("../../dbs/models/repositories/shop.repo");
+const { findAllProducts } = require("../../dbs/models/repositories/product.repo");
 const {
   NotFoundResponseError,
   BadRequestResponseError,
 } = require("../../core/error.response");
 const { convertStringToMongoId } = require("../../utils/index");
-const Discount = require("@models/discount.model");
+const Discount = require("../../dbs/models/discount.model");
 const {
   checkDiscountExist,
+  findAllDiscountCodeUnselect,
 } = require("../../dbs/models/repositories/discount.repo");
 /**
  * Discount Service
@@ -97,7 +95,7 @@ class DiscountService {
     await newDiscount.save();
     return newDiscount;
   }
-  static async upDateDiscount({ userId, discountId, payload }) {
+  static async updateDiscount({ userId, discountId, payload }) {
     //TODO: update discount
     const {
       discount_shop,
@@ -191,6 +189,9 @@ class DiscountService {
     //1-check if the shop is exist and the user is the shop owner
     if (!(await checkShopExist({ shopId }))) {
       throw new BadRequestResponseError("Shop not found");
+    }
+    if (userId && (await checkShopOwner({ userId, shopId }))) {
+      throw new BadRequestResponseError("You are not the shop owner");
     }
     //2-check if the discount code is exist
     const discount = await Discount.findOne({
@@ -466,3 +467,5 @@ class DiscountService {
     return result;
   }
 }
+
+module.exports = DiscountService;
